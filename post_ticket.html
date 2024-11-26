@@ -1,0 +1,171 @@
+<html>
+<head>
+    <title>Bus Ticket Resell</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        input[type="date"]::before {
+            content: attr(placeholder);
+            color: #9CA3AF; /* Tailwind's gray-400 */
+            margin-right: 0.5rem;
+        }
+        input[type="date"]:focus::before,
+        input[type="date"]:valid::before {
+            content: "";
+        }
+        input[type="number"]::placeholder {
+            color: #9CA3AF; /* Tailwind's gray-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [source, setSource] = React.useState("");
+            const [destination, setDestination] = React.useState("");
+            const [date, setDate] = React.useState("");
+            const [time, setTime] = React.useState("");
+            const [tickets, setTickets] = React.useState(0);
+            const [companyName, setCompanyName] = React.useState("");
+            const [price, setPrice] = React.useState("");
+
+            const swapLocations = () => {
+                const temp = source;
+                setSource(destination);
+                setDestination(temp);
+            };
+
+            const setToday = () => {
+                const today = new Date().toISOString().split('T')[0];
+                setDate(today);
+            };
+
+            const setTomorrow = () => {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(today.getDate() + 1);
+                setDate(tomorrow.toISOString().split('T')[0]);
+            };
+
+            const handlePriceChange = (e) => {
+                const value = e.target.value;
+                if (value.length <= 4) {
+                    setPrice(value);
+                }
+            };
+
+            return (
+                <div className="flex flex-col items-center bg-gray-100 min-h-screen">
+                    <div className="bg-blue-600 w-full p-4 text-white flex justify-center items-center">
+                        <h1 className="text-lg font-bold">Bus Ticket Resell</h1>
+                    </div>
+                    <div className="bg-white w-11/12 mt-4 rounded-lg shadow-md mb-20">
+                        <div className="bg-blue-600 w-full p-4 text-white flex justify-between items-center rounded-t-lg">
+                            <h2 className="text-lg font-bold">Post ticket</h2>
+                            <i className="fas fa-bus-alt text-2xl"></i>
+                        </div>
+                        <div className="p-4">
+                            <div className="flex items-center py-2 relative">
+                                <i className="fas fa-bus text-gray-500 mr-2"></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="ENTER SOURCE" 
+                                    className="flex-grow outline-none border-b border-gray-300" 
+                                    value={source}
+                                    onChange={(e) => setSource(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex items-center py-2 relative">
+                                <button 
+                                    className="absolute left-1/2 transform -translate-x-1/2 bg-blue-600 text-white p-2 rounded-full"
+                                    onClick={swapLocations}
+                                >
+                                    <i className="fas fa-arrows-alt-h transform rotate-90"></i>
+                                </button>
+                            </div>
+                            <div className="flex items-center py-2 relative">
+                                <i className="fas fa-bus text-gray-500 mr-2"></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="ENTER DESTINATION" 
+                                    className="flex-grow outline-none border-b border-gray-300" 
+                                    value={destination}
+                                    onChange={(e) => setDestination(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex items-center border-b py-2 mt-2">
+                                <i className="fas fa-calendar-alt text-gray-500 mr-2"></i>
+                                <input 
+                                    type="date" 
+                                    placeholder="SELECT DATE" 
+                                    className="flex-grow outline-none" 
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                />
+                                <div className="flex space-x-2 ml-2">
+                                    <button className="text-blue-600" onClick={setToday}>TODAY</button>
+                                    <button className="text-blue-600" onClick={setTomorrow}>TOMORROW</button>
+                                </div>
+                            </div>
+                            <div className="flex items-center border-b py-2 mt-2">
+                                <i className="fas fa-clock text-gray-500 mr-2"></i>
+                                <input 
+                                    type="time" 
+                                    placeholder="ENTER TIME" 
+                                    className="flex-grow outline-none" 
+                                    value={time}
+                                    onChange={(e) => setTime(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex items-center border-b py-2 mt-2">
+                                <i className="fas fa-ticket-alt text-gray-500 mr-2"></i>
+                                <input 
+                                    type="number" 
+                                    placeholder="NO. OF TICKETS" 
+                                    className="flex-grow outline-none" 
+                                    value={tickets}
+                                    onChange={(e) => setTickets(e.target.value)}
+                                    min="0"
+                                    max="4"
+                                />
+                            </div>
+                            <div className="flex items-center border-b py-2 mt-2">
+                                <i className="fas fa-building text-gray-500 mr-2"></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="BUS COMPANY NAME" 
+                                    className="flex-grow outline-none" 
+                                    value={companyName}
+                                    onChange={(e) => setCompanyName(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex items-center border-b py-2 mt-2">
+                                <i className="fas fa-rupee-sign text-gray-500 mr-2"></i>
+                                <input 
+                                    type="number" 
+                                    placeholder="PRICE" 
+                                    className="flex-grow outline-none" 
+                                    value={price}
+                                    onChange={handlePriceChange}
+                                    max="9999"
+                                />
+                            </div>
+                            <button className="bg-blue-600 text-white w-full py-2 mt-4 rounded">POST</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
